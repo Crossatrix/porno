@@ -3,36 +3,150 @@
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
- <title>Crosssino</title>
+ <title>Englisch Lernen</title>
  <style>
  html, body {
  margin: 0;
  padding: 0;
  width: 100vw;
- /* Nutzt dvh (Dynamic Viewport) und fällt auf vh zurück, falls der Browser es nicht kennt */
  height: 100vh;
  height: 100dvh; 
  overflow: hidden;
- background-color: hsl(220, 0%, 0%);
+ background-color: hsl(220, 20%, 10%);
+ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
  }
 
+ /* Login-Maske */
+ #login-container {
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100vw;
+ height: 100dvh;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ background-color: hsl(220, 25%, 8%);
+ z-index: 10;
+ }
+
+ .login-box {
+ background: hsl(220, 20%, 15%);
+ padding: 30px;
+ border-radius: 12px;
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+ text-align: center;
+ max-width: 320px;
+ width: 85%;
+ border: 1px solid hsl(220, 20%, 22%);
+ }
+
+ h2 {
+ color: #fff;
+ margin-top: 0;
+ margin-bottom: 20px;
+ font-size: 22px;
+ }
+
+ input[type="password"] {
+ width: 100%;
+ padding: 12px;
+ margin-bottom: 16px;
+ border-radius: 6px;
+ border: 1px solid hsl(220, 20%, 25%);
+ background: hsl(220, 20%, 10%);
+ color: #fff;
+ font-size: 16px;
+ box-sizing: border-box;
+ }
+
+ input[type="password"]:focus {
+ outline: none;
+ border-color: hsl(210, 100%, 60%);
+ }
+
+ button {
+ width: 100%;
+ padding: 12px;
+ border: none;
+ border-radius: 6px;
+ background: hsl(210, 100%, 55%);
+ color: white;
+ font-size: 16px;
+ font-weight: bold;
+ cursor: pointer;
+ transition: background 0.2s;
+ }
+
+ button:hover {
+ background: hsl(210, 100%, 45%);
+ }
+
+ #error-msg {
+ color: hsl(0, 100%, 65%);
+ font-size: 14px;
+ margin-top: 12px;
+ min-height: 20px;
+ }
+
+ /* Iframe standardmäßig versteckt */
  iframe {
  position: absolute;
  top: 0;
  left: 0;
  width: 100vw;
  height: 100vh;
- height: 100dvh; /* Zwingt den IFrame, exakt im sichtbaren Bereich zu bleiben */
+ height: 100dvh;
  border: none;
  margin: 0;
  padding: 0;
+ display: none;
  }
  </style>
 </head>
 <body>
- <iframe src="https://crosssino.lovable.app" 
+
+ <div id="login-container">
+ <div class="login-box">
+ <h2>Bereich geschützt</h2>
+ <input type="password" id="password-input" placeholder="Passwort eingeben" autofocus>
+ <button onclick="checkPassword()">Freischalten</button>
+ <div id="error-msg"></div>
+ </div>
+ </div>
+
+ <iframe id="protected-iframe" 
+ src="https://xhamster.com" 
  title="Crosssino"
  allow="camera; microphone; fullscreen">
  </iframe>
+
+ <script>
+ // Das Passwort im Klartext. 
+ // Wenn du GitHub Actions nutzt, kannst du den Wert hier beim Build ersetzen lassen.
+ const REQUIRED_PASSWORD = "Crossatrix"; 
+
+ function checkPassword() {
+ const input = document.getElementById("password-input").value;
+ const errorMsg = document.getElementById("error-msg");
+
+ if (input === REQUIRED_PASSWORD) {
+ // Verberge Login und zeige Iframe
+ document.getElementById("login-container").style.display = "none";
+ document.getElementById("protected-iframe").style.display = "block";
+ } else {
+ errorMsg.textContent = "Falsches Passwort. Bitte versuche es erneut.";
+ document.getElementById("password-input").value = "";
+ }
+ }
+
+ // Login per Enter-Taste ermöglichen
+ document.getElementById("password-input").addEventListener("keypress", function(event) {
+ if (event.key === "Enter") {
+ checkPassword();
+ }
+ });
+ </script>
 </body>
 </html>
